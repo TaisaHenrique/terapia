@@ -25,12 +25,12 @@ const weeklyMoodData = [
 ];
 
 const moodOptions = [
-  { label: "Feliz", icon: Smile, color: "bg-success" },
-  { label: "Calmo", icon: Smile, color: "bg-primary" },
-  { label: "Neutro", icon: Meh, color: "bg-muted" },
-  { label: "Triste", icon: Frown, color: "bg-warning" },
-  { label: "Irritado", icon: Frown, color: "bg-destructive" },
-  { label: "Rindo", icon: Smile, color: "bg-secondary" },
+  { label: "Feliz", icon: Smile, color: "bg-success", selected: false },
+  { label: "Calmo", icon: Smile, color: "bg-primary", selected: false },
+  { label: "Neutro", icon: Meh, color: "bg-muted", selected: true },
+  { label: "Triste", icon: Frown, color: "bg-warning", selected: false },
+  { label: "Irritado", icon: Frown, color: "bg-destructive", selected: false },
+  { label: "Rindo", icon: Smile, color: "bg-secondary", selected: false },
 ];
 
 const MoodTracker = () => {
@@ -76,11 +76,12 @@ const MoodTracker = () => {
                   {moodOptions.map((mood, index) => (
                     <button
                       key={index}
-                      className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all hover:border-primary ${
-                        mood.label === "Neutro" ? "border-primary bg-primary/5" : "border-border"
+                      className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all hover:border-primary animate-fade-in ${
+                        mood.selected ? "border-primary bg-primary/5" : "border-border"
                       }`}
+                      onClick={() => {}}
                     >
-                      <div className={`p-3 rounded-full ${mood.color}`}>
+                      <div className={`p-3 rounded-full ${mood.color} transition-transform hover:scale-110`}>
                         <mood.icon className="h-6 w-6 text-white" />
                       </div>
                       <span className="text-sm font-medium">{mood.label}</span>
@@ -107,11 +108,12 @@ const MoodTracker = () => {
                   {moodOptions.map((mood, index) => (
                     <button
                       key={index}
-                      className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all hover:border-secondary ${
-                        mood.label === "Neutro" ? "border-secondary bg-secondary/5" : "border-border"
+                      className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all hover:border-secondary animate-fade-in ${
+                        mood.selected ? "border-secondary bg-secondary/5" : "border-border"
                       }`}
+                      onClick={() => {}}
                     >
-                      <div className={`p-3 rounded-full ${mood.color}`}>
+                      <div className={`p-3 rounded-full ${mood.color} transition-transform hover:scale-110`}>
                         <mood.icon className="h-6 w-6 text-white" />
                       </div>
                       <span className="text-sm font-medium">{mood.label}</span>

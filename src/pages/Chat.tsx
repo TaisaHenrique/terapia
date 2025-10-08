@@ -179,13 +179,14 @@ const Chat = () => {
                 {messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`flex ${msg.isOwn ? "justify-end" : "justify-start"}`}
+                    className={`flex animate-fade-in ${msg.isOwn ? "justify-end" : "justify-start"}`}
+                    style={{ animationDelay: `${msg.id * 0.05}s` }}
                   >
                     <div
-                      className={`max-w-[70%] rounded-lg p-4 ${
+                      className={`max-w-[70%] rounded-lg p-4 transition-all hover:shadow-md ${
                         msg.isOwn
                           ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground"
+                          : "bg-muted text-foreground"
                       }`}
                     >
                       <p className="text-sm">{msg.content}</p>

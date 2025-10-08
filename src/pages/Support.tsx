@@ -110,10 +110,11 @@ const Support = () => {
             {popularTopics.map((topic, index) => (
               <Card
                 key={index}
-                className="cursor-pointer hover:border-primary transition-colors group"
+                className="cursor-pointer hover:border-primary transition-all group hover:shadow-lg animate-fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <CardContent className="flex items-start gap-4 p-6">
-                  <div className="p-3 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                  <div className="p-3 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-all group-hover:scale-110">
                     <topic.icon className="h-6 w-6 text-primary" />
                   </div>
                   <div>

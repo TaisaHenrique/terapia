@@ -98,7 +98,7 @@ const CoupleDashboard = () => {
         </div>
 
         {/* Overview Cards */}
-        <Card className="mb-8 bg-gradient-to-br from-primary/5 to-secondary/5">
+        <Card className="mb-8 bg-gradient-to-br from-primary/5 to-secondary/5 border-primary/20 animate-fade-in">
           <CardHeader>
             <CardTitle className="text-center">Visão Geral da Terapia</CardTitle>
             <p className="text-center text-sm text-muted-foreground">
@@ -107,21 +107,21 @@ const CoupleDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="grid gap-6 md:grid-cols-3">
-              <div className="text-center">
+              <div className="text-center animate-fade-in" style={{ animationDelay: "0.1s" }}>
                 <div className="flex justify-center mb-2">
-                  <Heart className="h-12 w-12 text-primary" />
+                  <Heart className="h-12 w-12 text-primary animate-pulse-glow" />
                 </div>
                 <div className="text-3xl font-bold mb-1">3 Meses</div>
                 <p className="text-sm text-muted-foreground">Jornada Concluída</p>
               </div>
-              <div className="text-center">
+              <div className="text-center animate-fade-in" style={{ animationDelay: "0.2s" }}>
                 <div className="flex justify-center mb-2">
                   <Calendar className="h-12 w-12 text-accent" />
                 </div>
                 <div className="text-3xl font-bold mb-1">2 Próximas</div>
                 <p className="text-sm text-muted-foreground">Sessões Agendadas</p>
               </div>
-              <div className="text-center">
+              <div className="text-center animate-fade-in" style={{ animationDelay: "0.3s" }}>
                 <div className="flex justify-center mb-2">
                   <Award className="h-12 w-12 text-secondary" />
                 </div>

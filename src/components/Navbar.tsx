@@ -77,14 +77,14 @@ export const Navbar = ({ items = [], showAuth = false }: NavbarProps) => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <>
+            <div className="flex items-center gap-2">
               <Button variant="ghost" asChild>
                 <Link to="/login">Entrar</Link>
               </Button>
               <Button asChild className="bg-gradient-primary">
                 <Link to="/cadastro">Começar Agora</Link>
               </Button>
-            </>
+            </div>
           )}
         </div>
       </div>

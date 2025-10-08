@@ -41,11 +41,12 @@ const Activities = () => {
                 <button
                   key={index}
                   onClick={() => setSelectedOption(option)}
-                  className={`p-6 rounded-lg border-2 transition-all text-left hover:border-primary ${
+                  className={`p-6 rounded-lg border-2 transition-all text-left hover:border-primary hover:shadow-md animate-fade-in ${
                     selectedOption === option
-                      ? "border-primary bg-primary/5"
+                      ? "border-primary bg-primary/5 shadow-md"
                       : "border-border"
                   }`}
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <p className="text-base">{option}</p>
                 </button>

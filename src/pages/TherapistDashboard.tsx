@@ -122,7 +122,7 @@ const TherapistDashboard = () => {
 
         {/* Stats Cards */}
         <div className="grid gap-6 md:grid-cols-3 mb-8">
-          <Card>
+          <Card className="animate-fade-in hover:shadow-lg transition-shadow" style={{ animationDelay: "0.1s" }}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 Clientes Ativos
@@ -134,7 +134,7 @@ const TherapistDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="animate-fade-in hover:shadow-lg transition-shadow" style={{ animationDelay: "0.2s" }}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 Sessões Esta Semana
@@ -146,7 +146,7 @@ const TherapistDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="animate-fade-in hover:shadow-lg transition-shadow" style={{ animationDelay: "0.3s" }}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 Progresso Médio
