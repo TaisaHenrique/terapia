@@ -4,26 +4,83 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Logo } from "@/components/Logo";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { auth, UserType } from "@/lib/auth";
+import { useToast } from "@/hooks/use-toast";
 
 const Cadastro = () => {
-  const [userType, setUserType] = useState("casal");
+  const [userType, setUserType] = useState<UserType>("casal");
   const [formData, setFormData] = useState({
     email: "",
     nome: "",
     senha: "",
     confirmarSenha: "",
   });
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (formData.senha !== formData.confirmarSenha) {
-      alert("As senhas não coincidem!");
+      toast({
+        title: "Erro",
+        description: "As senhas não coincidem!",
+        variant: "destructive",
+      });
       return;
     }
-    // Simulação de cadastro
-    window.location.href = userType === "casal" ? "/couple-dashboard" : "/therapist-dashboard";
+
+    if (formData.senha.length < 8) {
+      toast({
+        title: "Erro",
+        description: "A senha deve ter no mínimo 8 caracteres",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { error } = await auth.signUp({
+        email: formData.email,
+        password: formData.senha,
+        nome: formData.nome,
+        tipo_usuario: userType,
+      });
+
+      if (error) {
+        toast({
+          title: "Erro ao criar conta",
+          description: error.message === "User already registered" 
+            ? "Este e-mail já está cadastrado" 
+            : error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Conta criada com sucesso!",
+        description: "Redirecionando...",
+      });
+
+      // Redirecionar baseado no tipo de usuário
+      setTimeout(() => {
+        navigate(userType === "terapeuta" ? "/therapist-dashboard" : "/couple-dashboard");
+      }, 1000);
+    } catch (error) {
+      toast({
+        title: "Erro inesperado",
+        description: "Ocorreu um erro ao criar sua conta. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -42,7 +99,7 @@ const Cadastro = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-3">
               <Label>Tipo de Conta</Label>
-              <RadioGroup value={userType} onValueChange={setUserType}>
+              <RadioGroup value={userType} onValueChange={(value) => setUserType(value as UserType)}>
                 <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-muted/50 cursor-pointer">
                   <RadioGroupItem value="casal" id="casal" />
                   <Label htmlFor="casal" className="flex-1 cursor-pointer">
@@ -107,8 +164,8 @@ const Cadastro = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full bg-gradient-primary" size="lg">
-              Criar Conta
+            <Button type="submit" className="w-full bg-gradient-primary" size="lg" disabled={loading}>
+              {loading ? "Criando conta..." : "Criar Conta"}
             </Button>
 
             <div className="text-center text-sm">

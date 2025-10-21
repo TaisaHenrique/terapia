@@ -3,17 +3,62 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/Logo";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { auth } from "@/lib/auth";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulação de login - redireciona para dashboard
-    window.location.href = "/couple-dashboard";
+    setLoading(true);
+
+    try {
+      const { error, session } = await auth.signIn(email, password);
+
+      if (error) {
+        toast({
+          title: "Erro ao fazer login",
+          description: error.message === "Invalid login credentials" 
+            ? "E-mail ou senha incorretos" 
+            : error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (session?.user) {
+        // Buscar perfil do usuário para redirecionar corretamente
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("tipo_usuario")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        toast({
+          title: "Login realizado com sucesso!",
+          description: "Bem-vindo de volta.",
+        });
+
+        // Redirecionar baseado no tipo de usuário
+        navigate(profile?.tipo_usuario === "terapeuta" ? "/therapist-dashboard" : "/couple-dashboard");
+      }
+    } catch (error) {
+      toast({
+        title: "Erro inesperado",
+        description: "Ocorreu um erro ao fazer login. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -60,8 +105,8 @@ const Login = () => {
                 Esqueceu a senha?
               </Link>
             </div>
-            <Button type="submit" className="w-full bg-gradient-primary" size="lg">
-              Entrar
+            <Button type="submit" className="w-full bg-gradient-primary" size="lg" disabled={loading}>
+              {loading ? "Entrando..." : "Entrar"}
             </Button>
             <div className="text-center text-sm">
               <span className="text-muted-foreground">Não tem uma conta? </span>
