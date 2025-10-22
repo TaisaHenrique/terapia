@@ -34,12 +34,23 @@ export const useChatMessages = (destinatarioId?: string) => {
   });
 
   const sendMutation = useMutation({
-    mutationFn: async (message: Omit<TablesInsert<"chat_messages">, "remetente_id">) => {
+    mutationFn: async (message: Omit<TablesInsert<"chat_messages">, "remetente_id" | "remetente_nome">) => {
       if (!user?.id) throw new Error("User not authenticated");
+      
+      // Buscar nome do usuário
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("nome")
+        .eq("id", user.id)
+        .single();
       
       const { data, error } = await supabase
         .from("chat_messages")
-        .insert({ ...message, remetente_id: user.id })
+        .insert({ 
+          ...message, 
+          remetente_id: user.id,
+          remetente_nome: profile?.nome || "Usuário"
+        })
         .select()
         .single();
 

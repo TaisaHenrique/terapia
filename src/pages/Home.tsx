@@ -35,7 +35,7 @@ const Home = () => {
                   asChild
                   className="bg-white text-primary hover:bg-white/90 text-lg h-14 px-8"
                 >
-                  <Link to="/cadastro">Iniciar terapia</Link>
+                  <Link to="/login">Iniciar terapia</Link>
                 </Button>
                 <Button
                   size="lg"
@@ -164,7 +164,7 @@ const Home = () => {
               asChild
               className="bg-gradient-primary text-lg h-14 px-8"
             >
-              <Link to="/cadastro">Começar Agora</Link>
+              <Link to="/login">Começar Agora</Link>
             </Button>
           </div>
         </div>

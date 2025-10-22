@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Users, MessageCircle } from "lucide-react";
 import { useTherapistClients } from "@/hooks/useTherapistClients";
 import { Link } from "react-router-dom";
+import { CreateCoupleModal } from "@/components/CreateCoupleModal";
 
 const TherapistDashboard = () => {
   const { data: clients = [], isLoading } = useTherapistClients();
@@ -30,11 +31,14 @@ const TherapistDashboard = () => {
       />
 
       <main className="container py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Dashboard do Terapeuta</h1>
-          <p className="text-muted-foreground">
-            Gerencie seus clientes e acompanhe o progresso deles
-          </p>
+        <div className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Dashboard do Terapeuta</h1>
+            <p className="text-muted-foreground">
+              Gerencie seus clientes e acompanhe o progresso deles
+            </p>
+          </div>
+          <CreateCoupleModal />
         </div>
 
         <div className="grid gap-6 md:grid-cols-3 mb-8">

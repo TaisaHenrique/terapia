@@ -58,6 +58,7 @@ export type Database = {
           lida: boolean | null
           mensagem: string
           remetente_id: string
+          remetente_nome: string | null
         }
         Insert: {
           data_envio?: string | null
@@ -66,6 +67,7 @@ export type Database = {
           lida?: boolean | null
           mensagem: string
           remetente_id: string
+          remetente_nome?: string | null
         }
         Update: {
           data_envio?: string | null
@@ -74,6 +76,7 @@ export type Database = {
           lida?: boolean | null
           mensagem?: string
           remetente_id?: string
+          remetente_nome?: string | null
         }
         Relationships: [
           {
@@ -181,6 +184,7 @@ export type Database = {
           id: string
           nivel: number | null
           nome: string
+          parceiro_id: string | null
           pontos: number | null
           tipo_usuario: Database["public"]["Enums"]["user_type"]
           ultima_atualizacao: string | null
@@ -193,6 +197,7 @@ export type Database = {
           id: string
           nivel?: number | null
           nome: string
+          parceiro_id?: string | null
           pontos?: number | null
           tipo_usuario: Database["public"]["Enums"]["user_type"]
           ultima_atualizacao?: string | null
@@ -205,11 +210,20 @@ export type Database = {
           id?: string
           nivel?: number | null
           nome?: string
+          parceiro_id?: string | null
           pontos?: number | null
           tipo_usuario?: Database["public"]["Enums"]["user_type"]
           ultima_atualizacao?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_parceiro_id_fkey"
+            columns: ["parceiro_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       support_tickets: {
         Row: {

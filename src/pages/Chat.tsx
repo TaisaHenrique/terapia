@@ -79,6 +79,11 @@ const Chat = () => {
                           : "bg-muted text-foreground"
                       }`}
                     >
+                      {!isOwn && msg.remetente_nome && (
+                        <p className="text-xs font-semibold mb-1 opacity-80">
+                          {msg.remetente_nome}
+                        </p>
+                      )}
                       <p className="text-sm">{msg.mensagem}</p>
                       <span className="text-xs opacity-70 mt-2 block">
                         {new Date(msg.data_envio!).toLocaleTimeString("pt-BR", {
