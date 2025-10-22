@@ -91,7 +91,7 @@ const TherapistDashboard = () => {
                       </div>
                     </div>
                     <Button size="sm" variant="outline" asChild>
-                      <Link to="/chat">
+                      <Link to={`/chat/${client.casal_id}`}>
                         <MessageCircle className="mr-2 h-4 w-4" />
                         Chat
                       </Link>

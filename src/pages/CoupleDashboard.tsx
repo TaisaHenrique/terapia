@@ -8,12 +8,14 @@ import { Link } from "react-router-dom";
 import { useProfile } from "@/hooks/useProfile";
 import { useCoupleProgress } from "@/hooks/useCoupleProgress";
 import { useActivities } from "@/hooks/useActivities";
+import { useCoupleTherapist } from "@/hooks/useCoupleTherapist";
 import { useMemo } from "react";
 
 const CoupleDashboard = () => {
   const { data: profile, isLoading: profileLoading } = useProfile();
   const { data: progressData = [] } = useCoupleProgress();
   const { data: activities = [] } = useActivities();
+  const { data: therapist } = useCoupleTherapist();
 
   const stats = useMemo(() => {
     const completed = progressData.filter((p) => p.status === "concluida").length;
@@ -177,12 +179,21 @@ const CoupleDashboard = () => {
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button variant="outline" className="w-full h-20" asChild>
-                <Link to="/chat" className="flex flex-col">
-                  <MessageCircle className="h-6 w-6 mb-2" />
-                  <span>Chat com Terapeuta</span>
-                </Link>
-              </Button>
+              {therapist?.terapeuta_id ? (
+                <Button variant="outline" className="w-full h-20" asChild>
+                  <Link to={`/chat/${therapist.terapeuta_id}`} className="flex flex-col">
+                    <MessageCircle className="h-6 w-6 mb-2" />
+                    <span>Chat com Terapeuta</span>
+                  </Link>
+                </Button>
+              ) : (
+                <Button variant="outline" className="w-full h-20" disabled>
+                  <div className="flex flex-col">
+                    <MessageCircle className="h-6 w-6 mb-2" />
+                    <span>Nenhum terapeuta atribuído</span>
+                  </div>
+                </Button>
+              )}
               <Button variant="outline" className="w-full h-20" asChild>
                 <Link to="/activities" className="flex flex-col">
                   <Rocket className="h-6 w-6 mb-2" />

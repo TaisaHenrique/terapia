@@ -63,7 +63,7 @@ const App = () => (
               }
             />
             <Route
-              path="/chat"
+              path="/chat/:destinatarioId"
               element={
                 <ProtectedRoute>
                   <Chat />

@@ -19,9 +19,12 @@ export const useChatMessages = (destinatarioId?: string) => {
         .order("data_envio", { ascending: true });
 
       if (destinatarioId) {
-        query = query.or(`remetente_id.eq.${user.id},destinatario_id.eq.${user.id}`)
-          .or(`remetente_id.eq.${destinatarioId},destinatario_id.eq.${destinatarioId}`);
+        // Mensagens entre o usuário atual e o destinatário específico
+        query = query.or(
+          `and(remetente_id.eq.${user.id},destinatario_id.eq.${destinatarioId}),and(remetente_id.eq.${destinatarioId},destinatario_id.eq.${user.id})`
+        );
       } else {
+        // Todas as mensagens do usuário
         query = query.or(`remetente_id.eq.${user.id},destinatario_id.eq.${user.id}`);
       }
 

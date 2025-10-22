@@ -5,27 +5,60 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, ArrowLeft } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import { useProfile } from "@/hooks/useProfile";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const Chat = () => {
+  const { destinatarioId } = useParams();
+  const navigate = useNavigate();
   const [message, setMessage] = useState("");
-  const { data: messages = [], sendMessage } = useChatMessages();
+  const [destinatarioInfo, setDestinatarioInfo] = useState<any>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const { data: messages = [], sendMessage } = useChatMessages(destinatarioId);
   const { data: profile } = useProfile();
 
-  const handleSend = () => {
-    if (!message.trim()) return;
+  useEffect(() => {
+    if (!destinatarioId) {
+      navigate("/couple-dashboard");
+      return;
+    }
 
-    // Para demonstração, usando um ID fixo de terapeuta
+    // Buscar informações do destinatário
+    const fetchDestinatario = async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("id, nome, avatar_url, tipo_usuario, parceiro_id")
+        .eq("id", destinatarioId)
+        .single();
+      
+      setDestinatarioInfo(data);
+    };
+
+    fetchDestinatario();
+  }, [destinatarioId, navigate]);
+
+  useEffect(() => {
+    // Auto-scroll para última mensagem
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const handleSend = () => {
+    if (!message.trim() || !destinatarioId) return;
+
     sendMessage(
-      { mensagem: message, destinatario_id: "00000000-0000-0000-0000-000000000000" },
+      { mensagem: message, destinatario_id: destinatarioId },
       {
         onSuccess: () => {
           setMessage("");
-          toast.success("Mensagem enviada!");
+        },
+        onError: () => {
+          toast.error("Erro ao enviar mensagem");
         },
       }
     );
@@ -53,17 +86,23 @@ const Chat = () => {
                 </Link>
               </Button>
               <Avatar>
+                <AvatarImage src={destinatarioInfo?.avatar_url} />
                 <AvatarFallback className="bg-primary text-primary-foreground">
-                  T
+                  {destinatarioInfo?.nome?.[0] || "U"}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <CardTitle className="text-lg">Chat com Terapeuta</CardTitle>
+                <CardTitle className="text-lg">
+                  {destinatarioInfo?.nome || "Carregando..."}
+                </CardTitle>
+                {destinatarioInfo?.tipo_usuario === "casal" && destinatarioInfo?.parceiro_id && (
+                  <p className="text-sm text-muted-foreground">Cliente</p>
+                )}
               </div>
             </div>
           </CardHeader>
 
-          <ScrollArea className="flex-1 p-4">
+          <ScrollArea className="flex-1 p-4" ref={scrollRef}>
             <div className="space-y-4">
               {messages.map((msg) => {
                 const isOwn = msg.remetente_id === profile?.id;
@@ -109,7 +148,12 @@ const Chat = () => {
                 placeholder="Digite sua mensagem..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleSend()}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                  }
+                }}
                 className="flex-1"
               />
               <Button size="icon" className="bg-gradient-primary" onClick={handleSend}>
