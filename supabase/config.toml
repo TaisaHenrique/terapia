@@ -1,1 +1,7 @@
 project_id = "ddwgfhiqblkqhpbdngsi"
+
+[functions.create-therapist]
+verify_jwt = false
+
+[functions.create-couple]
+verify_jwt = false
