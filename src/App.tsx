@@ -7,6 +7,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import CreateTherapist from "./pages/CreateTherapist";
 import CoupleDashboard from "./pages/CoupleDashboard";
 import TherapistDashboard from "./pages/TherapistDashboard";
 import MoodTracker from "./pages/MoodTracker";
@@ -27,6 +28,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/create-therapist" element={<CreateTherapist />} />
             <Route
               path="/couple-dashboard"
               element={

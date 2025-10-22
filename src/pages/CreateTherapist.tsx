@@ -3,59 +3,43 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/Logo";
-import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { auth } from "@/lib/auth";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
-const Login = () => {
+const CreateTherapist = () => {
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const { error, session } = await auth.signIn(email, password);
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-therapist`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password, nome }),
+        }
+      );
 
-      if (error) {
-        toast({
-          title: "Erro ao fazer login",
-          description: error.message === "Invalid login credentials" 
-            ? "E-mail ou senha incorretos" 
-            : error.message,
-          variant: "destructive",
-        });
-        return;
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erro ao criar terapeuta");
       }
 
-      if (session?.user) {
-        // Buscar perfil do usuário para redirecionar corretamente
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("tipo_usuario")
-          .eq("id", session.user.id)
-          .maybeSingle();
-
-        toast({
-          title: "Login realizado com sucesso!",
-          description: "Bem-vindo de volta.",
-        });
-
-        // Redirecionar baseado no tipo de usuário
-        navigate(profile?.tipo_usuario === "terapeuta" ? "/therapist-dashboard" : "/couple-dashboard");
-      }
-    } catch (error) {
-      toast({
-        title: "Erro inesperado",
-        description: "Ocorreu um erro ao fazer login. Tente novamente.",
-        variant: "destructive",
-      });
+      toast.success("Terapeuta criado com sucesso!");
+      setTimeout(() => navigate("/login"), 2000);
+    } catch (error: any) {
+      toast.error(error.message || "Erro ao criar terapeuta");
     } finally {
       setLoading(false);
     }
@@ -68,13 +52,24 @@ const Login = () => {
           <div className="flex justify-center mb-4">
             <Logo />
           </div>
-          <CardTitle className="text-2xl">Bem-vindo de volta!</CardTitle>
+          <CardTitle className="text-2xl">Cadastro de Terapeuta</CardTitle>
           <p className="text-sm text-muted-foreground">
-            Entre para continuar sua jornada
+            Crie sua conta de terapeuta para começar
           </p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="nome">Nome Completo</Label>
+              <Input
+                id="nome"
+                type="text"
+                placeholder="Seu nome completo"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                required
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">E-mail</Label>
               <Input
@@ -91,22 +86,15 @@ const Login = () => {
               <Input
                 id="password"
                 type="password"
-                placeholder="Digite sua senha"
+                placeholder="Mínimo 6 caracteres"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={6}
               />
             </div>
-            <div className="flex items-center justify-between">
-              <Link
-                to="/recuperar-senha"
-                className="text-sm text-primary hover:underline"
-              >
-                Esqueceu a senha?
-              </Link>
-            </div>
             <Button type="submit" className="w-full bg-gradient-primary" size="lg" disabled={loading}>
-              {loading ? "Entrando..." : "Entrar"}
+              {loading ? "Criando conta..." : "Criar Conta de Terapeuta"}
             </Button>
           </form>
         </CardContent>
@@ -115,4 +103,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default CreateTherapist;
