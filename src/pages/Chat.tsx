@@ -27,7 +27,7 @@ const Chat = () => {
       return;
     }
 
-    // Buscar informações do destinatário
+    // Buscar informações do destinatário e do parceiro se for casal
     const fetchDestinatario = async () => {
       const { data } = await supabase
         .from("profiles")
@@ -35,7 +35,21 @@ const Chat = () => {
         .eq("id", destinatarioId)
         .single();
       
-      setDestinatarioInfo(data);
+      if (data?.parceiro_id) {
+        // Buscar informações do parceiro
+        const { data: parceiro } = await supabase
+          .from("profiles")
+          .select("id, nome")
+          .eq("id", data.parceiro_id)
+          .single();
+        
+        setDestinatarioInfo({
+          ...data,
+          parceiro_nome: parceiro?.nome
+        });
+      } else {
+        setDestinatarioInfo(data);
+      }
     };
 
     fetchDestinatario();
@@ -94,9 +108,12 @@ const Chat = () => {
               <div className="flex-1">
                 <CardTitle className="text-lg">
                   {destinatarioInfo?.nome || "Carregando..."}
+                  {destinatarioInfo?.parceiro_nome && (
+                    <> e {destinatarioInfo.parceiro_nome}</>
+                  )}
                 </CardTitle>
-                {destinatarioInfo?.tipo_usuario === "casal" && destinatarioInfo?.parceiro_id && (
-                  <p className="text-sm text-muted-foreground">Cliente</p>
+                {destinatarioInfo?.tipo_usuario === "casal" && (
+                  <p className="text-sm text-muted-foreground">Casal</p>
                 )}
               </div>
             </div>
