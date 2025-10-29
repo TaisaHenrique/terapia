@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
-import { Users, MessageCircle } from "lucide-react";
+import { Users, MessageCircle, Trophy } from "lucide-react";
 import { useTherapistClients } from "@/hooks/useTherapistClients";
 import { Link } from "react-router-dom";
 import { CreateCoupleModal } from "@/components/CreateCoupleModal";
@@ -24,7 +24,7 @@ const TherapistDashboard = () => {
       <Navbar
         items={[
           { label: "Dashboard", href: "/therapist-dashboard" },
-          { label: "Clientes", href: "/therapist-dashboard" },
+          { label: "Atividades", href: "/manage-activities" },
           { label: "Suporte", href: "/support" },
         ]}
         showAuth
@@ -53,6 +53,22 @@ const TherapistDashboard = () => {
               <div className="text-3xl font-bold">{clients.length}</div>
             </CardContent>
           </Card>
+
+          <Link to="/manage-activities" className="block">
+            <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Gerenciar Atividades
+                </CardTitle>
+                <Trophy className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Crie e gerencie atividades para seus casais
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
 
         <Card>

@@ -13,6 +13,7 @@ import CoupleDashboard from "./pages/CoupleDashboard";
 import TherapistDashboard from "./pages/TherapistDashboard";
 import MoodTracker from "./pages/MoodTracker";
 import Activities from "./pages/Activities";
+import ManageActivities from "./pages/ManageActivities";
 import Chat from "./pages/Chat";
 import Support from "./pages/Support";
 import Profile from "./pages/Profile";
@@ -60,6 +61,14 @@ const App = () => (
               element={
                 <RoleProtectedRoute allowedRole="casal">
                   <Activities />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/manage-activities"
+              element={
+                <RoleProtectedRoute allowedRole="terapeuta">
+                  <ManageActivities />
                 </RoleProtectedRoute>
               }
             />
