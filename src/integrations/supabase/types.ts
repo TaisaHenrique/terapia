@@ -177,6 +177,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          ativo: boolean
           avatar_url: string | null
           bio: string | null
           data_criacao: string | null
@@ -190,6 +191,7 @@ export type Database = {
           ultima_atualizacao: string | null
         }
         Insert: {
+          ativo?: boolean
           avatar_url?: string | null
           bio?: string | null
           data_criacao?: string | null
@@ -203,6 +205,7 @@ export type Database = {
           ultima_atualizacao?: string | null
         }
         Update: {
+          ativo?: boolean
           avatar_url?: string | null
           bio?: string | null
           data_criacao?: string | null
@@ -305,15 +308,44 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
       calcular_nivel: { Args: { pontos_atuais: number }; Returns: number }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       activity_status: "nao_iniciada" | "em_progresso" | "concluida"
+      app_role: "admin" | "user"
       mood_level: "muito_triste" | "triste" | "neutro" | "feliz" | "muito_feliz"
       ticket_status: "aberto" | "em_andamento" | "resolvido" | "fechado"
       user_type: "casal" | "terapeuta"
@@ -445,6 +477,7 @@ export const Constants = {
   public: {
     Enums: {
       activity_status: ["nao_iniciada", "em_progresso", "concluida"],
+      app_role: ["admin", "user"],
       mood_level: ["muito_triste", "triste", "neutro", "feliz", "muito_feliz"],
       ticket_status: ["aberto", "em_andamento", "resolvido", "fechado"],
       user_type: ["casal", "terapeuta"],

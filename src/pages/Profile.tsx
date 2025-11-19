@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/Navbar";
+import { BackButton } from "@/components/BackButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -123,6 +124,9 @@ const Profile = () => {
       />
 
       <main className="container py-8 max-w-4xl">
+        <div className="mb-6">
+          <BackButton />
+        </div>
         <h1 className="text-3xl font-bold mb-8">Meu Perfil</h1>
 
         <div className="grid gap-6">

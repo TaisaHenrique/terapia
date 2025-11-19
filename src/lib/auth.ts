@@ -45,6 +45,33 @@ export const auth = {
       password,
     });
 
+    if (error) {
+      return {
+        user: data.user,
+        session: data.session,
+        error,
+      };
+    }
+
+    // Verificar se a conta está ativa
+    if (data.user) {
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("ativo")
+        .eq("id", data.user.id)
+        .single();
+
+      if (profileError || !profile?.ativo) {
+        // Fazer logout se a conta estiver desativada
+        await supabase.auth.signOut();
+        return {
+          user: null,
+          session: null,
+          error: new Error("Conta desativada. Entre em contato com o administrador."),
+        };
+      }
+    }
+
     return {
       user: data.user,
       session: data.session,
