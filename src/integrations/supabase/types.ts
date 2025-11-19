@@ -310,10 +310,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      calcular_nivel: {
-        Args: { pontos_atuais: number }
-        Returns: number
-      }
+      calcular_nivel: { Args: { pontos_atuais: number }; Returns: number }
     }
     Enums: {
       activity_status: "nao_iniciada" | "em_progresso" | "concluida"
