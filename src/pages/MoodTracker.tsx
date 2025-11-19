@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/Navbar";
+import { BackButton } from "@/components/BackButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -106,6 +107,9 @@ const MoodTracker = () => {
       />
 
       <main className="container py-8">
+        <div className="mb-6">
+          <BackButton />
+        </div>
         <h1 className="text-3xl font-bold mb-8">Rastreador de Humor</h1>
 
         <Card className="mb-8">

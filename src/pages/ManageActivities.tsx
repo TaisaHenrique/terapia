@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/Navbar";
+import { BackButton } from "@/components/BackButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -68,6 +69,9 @@ const ManageActivities = () => {
       />
 
       <main className="container py-8">
+        <div className="mb-6">
+          <BackButton />
+        </div>
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold">Gerenciar Atividades</h1>
           <Button onClick={() => setShowForm(!showForm)}>

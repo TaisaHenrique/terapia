@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/Navbar";
+import { BackButton } from "@/components/BackButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -91,6 +92,9 @@ const Chat = () => {
       />
 
       <div className="flex-1 container py-8">
+        <div className="mb-6">
+          <BackButton />
+        </div>
         <Card className="h-[calc(100vh-12rem)] flex flex-col">
           <CardHeader className="border-b">
             <div className="flex items-center gap-3">

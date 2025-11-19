@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/Navbar";
+import { BackButton } from "@/components/BackButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -86,6 +87,10 @@ const Support = () => {
       />
 
       <main className="container py-8">
+        <div className="mb-6">
+          <BackButton />
+        </div>
+        
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex mb-4">

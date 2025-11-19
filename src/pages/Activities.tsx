@@ -1,18 +1,21 @@
 import { Navbar } from "@/components/Navbar";
+import { BackButton } from "@/components/BackButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
 import { useActivities } from "@/hooks/useActivities";
 import { useCoupleProgress } from "@/hooks/useCoupleProgress";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Clock, Target, Award } from "lucide-react";
+import { Clock, Target, Award, Save } from "lucide-react";
 
 const Activities = () => {
   const { data: activities = [], isLoading } = useActivities();
   const { data: progressData = [], createProgress, updateProgress } = useCoupleProgress();
   const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
+  const [feedbacks, setFeedbacks] = useState<Record<string, string>>({});
 
   const handleStartActivity = (activityId: string) => {
     const existing = progressData.find((p) => p.atividade_id === activityId);
@@ -57,6 +60,27 @@ const Activities = () => {
     return progressData.find((p) => p.atividade_id === activityId);
   };
 
+  const handleSaveFeedback = (progressId: string) => {
+    const feedback = feedbacks[progressId];
+    if (!feedback?.trim()) {
+      toast.error("Por favor, adicione uma reflexão antes de salvar.");
+      return;
+    }
+
+    updateProgress(
+      {
+        id: progressId,
+        feedback: feedback.trim(),
+      },
+      {
+        onSuccess: () => {
+          toast.success("Reflexão salva com sucesso!");
+          setFeedbacks((prev) => ({ ...prev, [progressId]: "" }));
+        },
+      }
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -84,6 +108,9 @@ const Activities = () => {
       />
 
       <main className="container py-8">
+        <div className="mb-6">
+          <BackButton />
+        </div>
         <h1 className="text-3xl font-bold mb-8">Atividades Terapêuticas</h1>
 
         {/* Activity Stats */}
@@ -199,12 +226,40 @@ const Activities = () => {
                         </div>
                         <Progress value={progress.progresso || 0} className="h-2" />
                       </div>
-                      <Button
-                        className="w-full"
-                        onClick={() => handleCompleteActivity(progress.id)}
-                      >
-                        Marcar como Concluída
-                      </Button>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="text-sm font-medium mb-2 block">
+                            Reflexão sobre a atividade
+                          </label>
+                          <Textarea
+                            placeholder="Como foi a experiência? Teve alguma dificuldade?"
+                            value={feedbacks[progress.id] || progress.feedback || ""}
+                            onChange={(e) =>
+                              setFeedbacks((prev) => ({
+                                ...prev,
+                                [progress.id]: e.target.value,
+                              }))
+                            }
+                            className="min-h-[100px]"
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            className="flex-1"
+                            onClick={() => handleSaveFeedback(progress.id)}
+                          >
+                            <Save className="h-4 w-4 mr-2" />
+                            Salvar Reflexão
+                          </Button>
+                          <Button
+                            className="flex-1"
+                            onClick={() => handleCompleteActivity(progress.id)}
+                          >
+                            Marcar como Concluída
+                          </Button>
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
                 );
@@ -231,7 +286,7 @@ const Activities = () => {
                       </div>
                       <CardTitle className="text-lg">{activity.titulo}</CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="space-y-3">
                       <p className="text-sm text-muted-foreground mb-2">
                         {activity.descricao}
                       </p>
@@ -241,10 +296,40 @@ const Activities = () => {
                           {new Date(progress.data_conclusao).toLocaleDateString("pt-BR")}
                         </p>
                       )}
-                      {progress.feedback && (
-                        <p className="text-sm mt-2 p-2 bg-muted rounded-lg">
-                          {progress.feedback}
-                        </p>
+                      
+                      {progress.feedback ? (
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Reflexão:</label>
+                          <p className="text-sm p-3 bg-muted rounded-lg whitespace-pre-wrap">
+                            {progress.feedback}
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">
+                            Adicionar reflexão sobre a atividade
+                          </label>
+                          <Textarea
+                            placeholder="Como foi a experiência? Teve alguma dificuldade?"
+                            value={feedbacks[progress.id] || ""}
+                            onChange={(e) =>
+                              setFeedbacks((prev) => ({
+                                ...prev,
+                                [progress.id]: e.target.value,
+                              }))
+                            }
+                            className="min-h-[100px]"
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleSaveFeedback(progress.id)}
+                            className="w-full"
+                          >
+                            <Save className="h-4 w-4 mr-2" />
+                            Salvar Reflexão
+                          </Button>
+                        </div>
                       )}
                     </CardContent>
                   </Card>

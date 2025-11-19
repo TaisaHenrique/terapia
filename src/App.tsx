@@ -14,6 +14,7 @@ import TherapistDashboard from "./pages/TherapistDashboard";
 import MoodTracker from "./pages/MoodTracker";
 import Activities from "./pages/Activities";
 import ManageActivities from "./pages/ManageActivities";
+import AdminPanel from "./pages/AdminPanel";
 import Chat from "./pages/Chat";
 import Support from "./pages/Support";
 import Profile from "./pages/Profile";
@@ -93,6 +94,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Support />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminPanel />
                 </ProtectedRoute>
               }
             />
